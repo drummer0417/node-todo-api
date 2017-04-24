@@ -27,7 +27,14 @@ MongoClient.connect(`mongodb://${host}:${port}/TodoApp`, (err, db) => {
             },
             $inc: {
                 'numberOfUpdates': 1
-            }
+            },
+
+            $currentDate: {
+                date: true,
+                "cancellation.date": {
+                    $type: "timestamp"
+                }
+            },
         }, {
             'returnOriginal': false
         }).then((result) => {
