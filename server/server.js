@@ -1,54 +1,17 @@
-var mongoose = require('mongoose');
+var express = require('express0');
+var bodyParser = require('body-parser');
 
-var port = '27017';
-var host = 'localhost';
+var {
+    mongoose
+} = require('./db/mongoose');
+var User = require('./db/User');
+var Todo = require('./db/Todo');
 
-// tell mongoose to use the nodejs build in promise (instead of some third party knaap)
-mongoose.Promise = global.Promise;
-mongoose.connect(`mongodb://${host}:${port}/TodoApp`);
+var port = process.env.PORT || 3000;
 
-// create mongoose mode
-var Todo = mongoose.model('Todo', {
-    text: {
-        type: String,
-        required: true,
-        minLength: 1,
-        trim: true
-    },
-    completed: {
-        type: Boolean,
-        default: false
-    },
-    completedAt: {
-        type: Number,
-        default: null
-    }
-});
 
-var User = mongoose.model('User', {
-    email: {
-        type: String,
-        required: true,
-        trim: true,
-        minLength: 1
-    }
-})
+var app = express();
 
-// var newTodo = new Todo({
-//     text: "Some other todo"
-// });
-//
-// newTodo.save().then((doc) => {
-//     console.log(`todo saved:\n${JSON.stringify(doc, undefined, 2)}`);
-// }, (err) => {
-//     console.log(`error saving document:\n${JSON.stringify(newTodo, undefined, 2)}\n${err}`);
-// })
-
-var user = new User({
-    email: 'joris van den broek'
-})
-user.save().then((doc) => {
-    console.log(`new user added:\n${JSON.stringify(doc, undefined, 2)}`);
-}, (error) => {
-    console.log(`error adding new user:\n${JSON.stringify(user, undefined, 2)}\nError: ${error}`);
+app.listen(port, () => {
+    console.log(`Server started on port ${port}`);
 })
