@@ -36,7 +36,7 @@ app.post('/todos', (req, res) => {
 app.get('/todos', (req, res) => {
   Todo.find({})
     .then((todos) => {
-      console.log(`Todo\'s: ${JSON.stringify(todos, undefined, 2)}`);
+      // console.log(`Todo\'s: ${JSON.stringify(todos, undefined, 2)}`);
       res.send({
         todos
       });
