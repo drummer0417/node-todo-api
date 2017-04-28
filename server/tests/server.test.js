@@ -1,16 +1,14 @@
 const expect = require('expect');
 const request = require('supertest');
 
-const {
-  Todo
-} = require('../models/todo');
-const {
-  app
-} = require('../server');
+const { Todo } = require('../models/todo');
+const { User } = require('../models/user');
+const { app } = require('../server');
 
 // run below lines of code if you want to remove all todos before running the test
 var numberOfDocs = 0;
 var aTodo = '';
+var aUser = undefined;
 
 beforeEach((done) => {
   Todo.find({}).then((todos) => {
@@ -21,6 +19,19 @@ beforeEach((done) => {
     numberOfDocs - 1;
     done();
   });
+})
+
+beforeEach((done) => {
+  User.find({}).then((users) => {
+      aUser = users[0];
+      done();
+    }, (errro) => {
+
+      done();
+    })
+    .catch((error) => {
+      done();
+    })
 })
 
 describe('/POST/todos', () => {
@@ -82,7 +93,7 @@ describe('/POST/todos', () => {
 
 describe('GET /todos', () => {
   //
-  it('should get a Todo by ID ', (done) => {
+  it('Should get a Todo by ID ', (done) => {
 
     request(app)
       .get('/todos')
@@ -93,4 +104,36 @@ describe('GET /todos', () => {
       .end(done);
 
   })
+});
+
+describe('Get /todos/id', () => {
+
+  it('Should pass in an invalid id and return a 404', (done) => {
+
+    request(app)
+      .get('/todos/123')
+      .expect(404)
+      .end(done);
+  })
+
+  it('Should pass in nonexitant id and return 404', (done) => {
+
+    request(app)
+      .get('/todos/58fe0cfe741ebb383a9f3712')
+      .expect(404)
+      .end(done);
+  })
+
+  it('Should pass in a validId and return 200 and a user object', (done) => {
+
+    request(app)
+      .get(`/todos/${aUser._id}`)
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.user.email).toEqual(aUser.email);
+        expect(res.body.user._id).toEqual(aUser._id);
+      })
+      .end(done);
+  })
+
 });
