@@ -23,6 +23,8 @@ beforeEach((done) => {
   });
 })
 
+// and another beforreEach here
+
 describe('/POST/todos', () => {
 
   it('Should send a request and return status 200', (done) => {
@@ -39,7 +41,7 @@ describe('/POST/todos', () => {
         expect(res.body.text).toEqual(text);
       })
       .end((error, res) => {
-        if (error) {
+        if(error) {
           console.error('Errortje', error);
           return done(error);
         }
@@ -65,7 +67,7 @@ describe('/POST/todos', () => {
       .send({})
       .expect(400)
       .end((error, res) => {
-        if (error) {
+        if(error) {
           console.error('Errortje', error);
           return done(error);
         }
