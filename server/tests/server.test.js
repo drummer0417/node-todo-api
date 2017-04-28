@@ -39,7 +39,7 @@ describe('/POST/todos', () => {
         expect(res.body.text).toEqual(text);
       })
       .end((error, res) => {
-        if(error) {
+        if (error) {
           console.error('Errortje', error);
           return done(error);
         }
@@ -60,14 +60,12 @@ describe('/POST/todos', () => {
 
   it('should send a "Bad" request and return status 400', (done) => {
 
-    console.log(`number of docs before test casee 2: ${numberOfDocs}`);
-
     request(app)
       .post('/todos')
       .send({})
       .expect(400)
       .end((error, res) => {
-        if(error) {
+        if (error) {
           console.error('Errortje', error);
           return done(error);
         }
@@ -90,28 +88,9 @@ describe('GET /todos', () => {
       .get('/todos')
       .expect(200)
       .expect((res) => {
-        Todo.findOne({
-            _id: aTodo._id
-          })
-          .then((theTodo) => {
-            expect(aTodo._id).toEqual(theTodo._id);
-          }, (error) => {
-            console.log('In error for some reason.\nError:\n', error);
-          })
-          .catch((error) => {
-            return done(error);
-          })
+        expect(res.body.todos.length).toBe(numberOfDocs);
       })
-      .end((error, res) => {
-        if(error) {
-          console.log('in error\n', res.body.todos.length);
-          console.log('Errrorrrrr:', error);
-          done(error)
-        } else {
-          done();
-        }
-      })
+      .end(done);
 
-    // ?\.then((todo) => {}, (err) => {});
   })
 });
