@@ -24,15 +24,11 @@ beforeEach((done) => {
 // and another beforreEach here
 beforeEach((done) => {
   User.find({}).then((users) => {
-      aUser = users[0];
-      done();
-    }, (errro) => {
-
-      done();
-    })
-    .catch((error) => {
-      done();
-    })
+    aUser = users[0];
+    done();
+  }, (errro) => {
+    done();
+  })
 })
 
 describe('/POST/todos', () => {
@@ -51,7 +47,7 @@ describe('/POST/todos', () => {
         expect(res.body.text).toEqual(text);
       })
       .end((error, res) => {
-        if (error) {
+        if(error) {
           console.error('Errortje', error);
           return done(error);
         }
@@ -77,7 +73,7 @@ describe('/POST/todos', () => {
       .send({})
       .expect(400)
       .end((error, res) => {
-        if (error) {
+        if(error) {
           console.error('Errortje', error);
           return done(error);
         }

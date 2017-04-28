@@ -9,8 +9,8 @@ MongoClient.connect(`mongodb://${host}:${port}/TodoApp`, (err, db) => {
   } else {
     console.log('You are now connected');
 
-    db.collection('User').insertOne({
-        email: "hans.vanmeurs@mongodb.com"
+    db.collection('users').insertOne({
+        email: "anAnonemousUser@somewhere.com"
       })
       .then((result) => {
         console.log(JSON.stringify(result.ops, undefined, 2));
