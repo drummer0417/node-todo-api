@@ -14,7 +14,11 @@ app.use(bodyParser.json());
 
 app.post('/todos', (req, res) => {
 
-  var todo = new Todo({ 'text': req.body.text, 'completed': req.body.completed });
+  var todo = new Todo({
+    'text': req.body.text,
+    'completed': req.body.completed,
+    'completed': req.body.completed
+  });
 
   todo.save().then((doc) => {
     // console.log(JSON.stringify(todo, undefined, 2));
@@ -47,11 +51,11 @@ app.get('/todos/:id', (req, res) => {
   var id = req.params.id;
   // console.log(`**************** params:\n${JSON.stringify(id, undefined, 2)}`);
 
-  if (!ObjectID.isValid(id)) {
+  if(!ObjectID.isValid(id)) {
     return res.status(404).send("Invalid id stecified");
   }
   User.findById(id).then((user) => {
-    if (user) {
+    if(user) {
       // res.send(`User: ${JSON.stringify(user, undefined, 2)}`);
       res.send({ user });
     } else {
