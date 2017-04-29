@@ -67,6 +67,27 @@ app.get('/todos/:id', (req, res) => {
 
 });
 
+app.get('/users/:id', (req, res) => {
+
+  var id = req.params.id;
+  // console.log(`**************** params:\n${JSON.stringify(req.params, undefined, 2)}`);
+
+  if(!ObjectID.isValid(id)) {
+    return res.status(404).send("Invalid id stecified");
+  }
+  User.findById(id).then((user) => {
+    if(user) {
+      // res.send(`User: ${JSON.stringify(user, undefined, 2)}`);
+      res.send({ user });
+    } else {
+      res.status(404).send('User not found!');
+    }
+  }, (error) => {
+    res.status(400).send(`User not found!, Error!\n${error}`);
+  });
+
+});
+
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 })
