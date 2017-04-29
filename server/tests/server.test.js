@@ -7,7 +7,7 @@ const { app } = require('../server');
 
 // run below lines of code if you want to remove all todos before running the test
 var numberOfDocs = 0;
-var aTodo = '';
+var aTodo = undefined;
 var aUser = undefined;
 
 beforeEach((done) => {
@@ -124,11 +124,11 @@ describe('Get /todos/id', () => {
   it('Should pass in a validId and return 200 and a user object', (done) => {
 
     request(app)
-      .get(`/todos/${aUser._id}`)
+      .get(`/todos/${aTodo._id}`)
       .expect(200)
       .expect((res) => {
-        expect(res.body.user.email).toEqual(aUser.email);
-        expect(res.body.user._id).toEqual(aUser._id);
+        expect(res.body.todo.text).toEqual(aTodo.text);
+        expect(res.body.todo._id).toEqual(aTodo._id);
       })
       .end(done);
   })

@@ -49,20 +49,20 @@ app.get('/todos', (req, res) => {
 app.get('/todos/:id', (req, res) => {
 
   var id = req.params.id;
-  // console.log(`**************** params:\n${JSON.stringify(id, undefined, 2)}`);
+  // console.log(`**************** params:\n${JSON.stringify(req.params, undefined, 2)}`);
 
   if(!ObjectID.isValid(id)) {
     return res.status(404).send("Invalid id stecified");
   }
-  User.findById(id).then((user) => {
-    if(user) {
+  Todo.findById(id).then((todo) => {
+    if(todo) {
       // res.send(`User: ${JSON.stringify(user, undefined, 2)}`);
-      res.send({ user });
+      res.send({ todo });
     } else {
-      res.status(404).send('User not found!');
+      res.status(404).send('Todo not found!');
     }
   }, (error) => {
-    res.status(400).send(`User not found!, Error!\n${error}`);
+    res.status(400).send(`Todo not found!, Error!\n${error}`);
   });
 
 });
