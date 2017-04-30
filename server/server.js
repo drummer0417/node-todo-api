@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser');
 const { ObjectID } = require('mongodb');
+const _ = require('lodash');
 
 const { mongoose } = require('./db/mongoose');
 const { User } = require('./models/user');
@@ -91,6 +92,41 @@ app.delete('/todos/:id', (req, res) => {
 
 })
 
+app.patch('/todos/:id', (req, res) => {
+
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)) {
+    res.status(404).send('Invalid ID');
+  }
+
+  var body = _.pick(req.body, ['completed', 'text']);
+  console.log(`body: ${JSON.stringify(body, undefined, 2)}`);
+  if(_.isBoolean(body.completed)) {
+    console.log('isBoolean');
+  }
+  if(_.isBoolean(body.completed) && body.completed) {
+    body.completedAt = new Date().getTime();
+    console.log('completed is true');
+  } else {
+    body.completed = false;
+    body.completedAt = null;
+  }
+  console.log('do the update now');
+  Todo.findByIdAndUpdate(id, { $set: body }, { new: true })
+    .then((todo) => {
+      if(todo) {
+        console.log('in todo');
+        res.send({ todo });
+      } else {
+        res.status(404);
+      }
+    })
+    .catch((error) => {
+      res.status(400).send(error);
+    });
+});
+
 app.get('/users/:id', (req, res) => {
 
   var id = req.params.id;
@@ -111,6 +147,7 @@ app.get('/users/:id', (req, res) => {
   });
 
 });
+
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
