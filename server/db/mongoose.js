@@ -5,7 +5,7 @@ var port = '27017';
 
 // tell mongoose to use the nodejs build in promise (instead of some third party knaap)
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI || `mongodb://${host}:${port}/TodoApp`);
+mongoose.connect(process.env.MONGODB_URI);
 
 module.exports = {
   mongoose: mongoose

@@ -3,11 +3,11 @@ const bodyParser = require('body-parser');
 const { ObjectID } = require('mongodb');
 const _ = require('lodash');
 
-const { mongoose } = require('./db/mongoose');
+const { httpPort } = require('./config/config');
 const { User } = require('./models/user');
 const { Todo } = require('./models/todo');
 
-var port = process.env.PORT || 3000;
+const { mongoose } = require('./db/mongoose');
 
 var app = express();
 
@@ -16,6 +16,7 @@ app.use(bodyParser.json());
 app.post('/todos', (req, res) => {
 
   var todo = new Todo({
+    '_id': req.body._id || new ObjectID,
     'text': req.body.text,
     'completed': req.body.completed,
     'completedAt': req.body.completedAt
@@ -142,9 +143,8 @@ app.get('/users/:id', (req, res) => {
 
 });
 
-
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
+app.listen(httpPort, () => {
+  console.log(`Server started on port ${httpPort}`);
 })
 
 module.exports = { app };
