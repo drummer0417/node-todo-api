@@ -47,7 +47,7 @@ describe('/POST/todos', () => {
         expect(res.body.text).toEqual(text);
       })
       .end((error, res) => {
-        if(error) {
+        if (error) {
           console.error('Errortje', error);
           return done(error);
         }
@@ -73,7 +73,7 @@ describe('/POST/todos', () => {
       .send({})
       .expect(400)
       .end((error, res) => {
-        if(error) {
+        if (error) {
           console.error('Errortje', error);
           return done(error);
         }
@@ -148,7 +148,7 @@ describe('DELETE /todos/:id', () => {
         expect(res.body.todo._id).toEqual(hexID);
       })
       .end((err, res) => {
-        if(err) {
+        if (err) {
           done(err);
         }
         Todo.findById(hexID)
@@ -159,7 +159,6 @@ describe('DELETE /todos/:id', () => {
           .catch((error) => done(error))
       });
   });
-
   it('Should return 404 as the todo with given id does not exist', (done) => {
     request(app)
       .delete(`/todos/58ffb3132b381333605a1ba9`)
@@ -167,9 +166,46 @@ describe('DELETE /todos/:id', () => {
       .end(done);
   });
 
-  it('Should return 404 because an invalid id is entered passed', (done) => {
+  it('Should return 404 because an invalid id is passed', (done) => {
+
     request(app)
-      .delete('todos/123')
+      .delete('/todos/123')
+      .expect(404)
+      .end(done);
+  })
+});
+
+describe('PATCH/todos/:id', () => {
+
+  it('Should updata a todo to compleded and set completedAt', (done) => {
+    request(app)
+      .patch(`/todos/${aTodo._id}`)
+      .send({ "text": "this todo is completed!!!", "completed": true })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.todo.completed).toBe(true);
+        expect(res.body.todo.completedAt).toBeA('number');
+      })
+      .end(done);
+  });
+
+  it('Should update a todo to completed is false and reset completedAt', (done) => {
+    request(app)
+      .patch(`/todos/${aTodo._id}`)
+      .send({ "text": "this todo isn't completed yet", "completed": false })
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.todo.text).toEqual("this todo isn't completed yet");
+        expect(res.body.todo.completed).toBe(false);
+        expect(res.body.todo.completedAt).toNotExist();
+      })
+      .end(done);
+  });
+
+  it('Should return 404 because an invalid id is passed', (done) => {
+
+    request(app)
+      .patch('/todos/123')
       .expect(404)
       .end(done);
   });

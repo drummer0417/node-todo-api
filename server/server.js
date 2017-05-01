@@ -50,13 +50,13 @@ app.get('/todos', (req, res) => {
 app.get('/todos/:id', (req, res) => {
 
   var id = req.params.id;
-  // console.log(`**************** params:\n${JSON.stringify(req.params, undefined, 2)}`);
 
-  if(!ObjectID.isValid(id)) {
+  if (!ObjectID.isValid(id)) {
     return res.status(404).send("Invalid id stecified");
   }
+
   Todo.findById(id).then((todo) => {
-    if(todo) {
+    if (todo) {
       // res.send(`User: ${JSON.stringify(user, undefined, 2)}`);
       res.send({ todo });
     } else {
@@ -72,13 +72,13 @@ app.delete('/todos/:id', (req, res) => {
 
   var id = req.params.id;
 
-  if(!ObjectID.isValid(id)) {
-    res.send('invalid id');
-    return console.log(`Invalid id: "${id}"`);
+  if (!ObjectID.isValid(id)) {
+    // console.log(`Invalid id: "${id}"`);
+    return res.status(404).send('invalid id');
   }
   Todo.findByIdAndRemove(id)
     .then((todo) => {
-      if(todo) {
+      if (todo) {
         res.send({ todo });
       } else {
         res.status(404).send('Todo not found');
@@ -96,30 +96,24 @@ app.patch('/todos/:id', (req, res) => {
 
   var id = req.params.id;
 
-  if(!ObjectID.isValid(id)) {
-    res.status(404).send('Invalid ID');
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send('Invalid ID');
   }
 
   var body = _.pick(req.body, ['completed', 'text']);
-  console.log(`body: ${JSON.stringify(body, undefined, 2)}`);
-  if(_.isBoolean(body.completed)) {
-    console.log('isBoolean');
-  }
-  if(_.isBoolean(body.completed) && body.completed) {
+
+  if (_.isBoolean(body.completed) && body.completed) {
     body.completedAt = new Date().getTime();
-    console.log('completed is true');
   } else {
     body.completed = false;
     body.completedAt = null;
   }
-  console.log('do the update now');
   Todo.findByIdAndUpdate(id, { $set: body }, { new: true })
     .then((todo) => {
-      if(todo) {
-        console.log('in todo');
+      if (todo) {
         res.send({ todo });
       } else {
-        res.status(404);
+        res.status(404).send('Todo not found...');
       }
     })
     .catch((error) => {
@@ -130,13 +124,13 @@ app.patch('/todos/:id', (req, res) => {
 app.get('/users/:id', (req, res) => {
 
   var id = req.params.id;
-  // console.log(`**************** params:\n${JSON.stringify(req.params, undefined, 2)}`);
 
-  if(!ObjectID.isValid(id)) {
+  if (!ObjectID.isValid(id)) {
     return res.status(404).send("Invalid id stecified");
   }
+
   User.findById(id).then((user) => {
-    if(user) {
+    if (user) {
       // res.send(`User: ${JSON.stringify(user, undefined, 2)}`);
       res.send({ user });
     } else {
