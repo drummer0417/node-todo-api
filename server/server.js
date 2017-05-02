@@ -2,6 +2,8 @@ const express = require('express')
 const bodyParser = require('body-parser');
 const { ObjectID } = require('mongodb');
 const _ = require('lodash');
+const jwt = require('jsonwebtoken');
+
 
 const { httpPort } = require('./config/config');
 const { User } = require('./models/user');
@@ -139,8 +141,22 @@ app.post('/users', (req, res) => {
     })
 });
 
+app.get('/users/me', (req, res) => {
+  var token = req.header('x-auth');
+
+  User.findByToken(token).then((user) => {
+
+      res.send(user);
+    })
+    .catch((error) => {
+      console.log('++++++++ error', error);
+      res.status(400).send();
+    })
+
+});
+
 app.get('/users/:id', (req, res) => {
-  k
+
 
   var id = req.params.id;
 
