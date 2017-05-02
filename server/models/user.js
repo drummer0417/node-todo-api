@@ -52,21 +52,21 @@ UserSchema.methods.generateAuthToken = function() {
 
 UserSchema.statics.findByToken = function(token) {
   var User = this;
-  var decoded;
 
   try {
-    decoded = jwt.verify(token, "secretPassPhrase");
+    var decoded = jwt.verify(token, "secretPassPhrase");
 
-    console.log(`decoded: ${JSON.stringify(decoded, undefined, 2)}`);
-    return User.findOne({
+    return this.findOne({
       '_id': decoded._id,
       'tokens.token': token,
       'tokens.access': decoded.access
     })
-  } catch (e) {
-
-  } finally {
-
+  } catch(e) {
+    // return new Promise((resolve, reject) => {
+    //   return reject('Authentication failed');
+    // });
+    // Below line does the same as 3 lines of code below
+    return Promise.reject('Authentication failed');
   }
 }
 
