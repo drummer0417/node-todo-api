@@ -164,3 +164,83 @@ describe('PATCH /todos/:id', () => {
       .end(done);
   });
 });
+
+describe('GET /users/me', () => {
+
+  it('Should get a valid user and authenticate return 200', (done) => {
+    request(app)
+      .get('/users/me')
+      .set('x-auth', usersArray[0].tokens[0].token)
+      .expect(200)
+      .expect((res) => {
+        // console.log('Response: ', res.body);
+        expect(res.body._id).toEqual(
+          usersArray[0]._id);
+        expect(res.body.email).toEqual(usersArray[0].email);
+      })
+      .end(done)
+  });
+
+  it('Should return 401, Token is valid but user is not found', (done) => {
+    request(app)
+      .get('/users/me')
+      .set('x-auth', usersArray[2].tokens[0].token)
+      .expect(401)
+      .expect((res) => {
+        expect(res.body).toEqual({});
+      })
+      .end(done)
+  });
+
+  it('Should return 401 User found but token does not match', (done) => {
+    request(app)
+      .get('/users/me')
+      .set('x-auth', usersArray[0].tokens[0].token + 'a')
+      .expect(401)
+      .expect((res) => {
+        expect(res.body).toEqual({});
+      })
+      .end(done)
+  })
+});
+
+describe('POST /users', () => {
+  console.log('User: ', usersArray[2]);
+  it('Should create a user', (done) => {
+    request(app)
+      .post('/users')
+      .send(usersArray[2])
+      .expect(200)
+      .expect((res) => {
+        expect(res.headers['x-auth']).toExist();
+        expect(res.body.user).toExist();
+        expect(res.body.user.email).toEqual(usersArray[2].email);
+      })
+      .end(done);
+  });
+
+  it('Should return validation errors if request invalid', (done) => {
+    request(app)
+      .post('/users')
+      .send(usersArray[3])
+      .expect(400)
+      .expect((res) => {
+        expect(res.error).toExist();
+        expect(res.error.text).toMatch(/passwor/);
+      })
+      .end(done);
+  });
+
+  it('Should return error if user email address already in use', (done) => {
+    request(app)
+      .post('/users')
+      .send(usersArray[0])
+      .expect(400)
+      .expect((res) => {
+        expect(res.error).toExist();
+        expect(res.error.text).toMatch(/duplicate key/);
+      })
+      .end(done);
+  });
+
+});

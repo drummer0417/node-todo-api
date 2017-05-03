@@ -13,6 +13,7 @@ const todosArray = [
 
 const userOneID = new ObjectID();
 const userTwoID = new ObjectID();
+const userThreeID = new ObjectID();
 
 const usersArray = [{
   _id: userOneID,
@@ -26,8 +27,27 @@ const usersArray = [{
   _id: userTwoID,
   email: 'userTwo@now.com',
   password: 'password!'
+}, {
+  _id: userThreeID,
+  email: 'userThree@now.com',
+  password: 'password!',
+  tokens: [{
+    access: 'auth',
+    token: jwt.sign({ _id: userThreeID, access: 'auth' }, "secretPassPhrase").toString()
+  }]
+}, {
+  email: 'user4@now.com',
+  password: 'pasrd!'
+}, {
+  email: 'userOne@now.com',
+  password: 'password!',
+  tokens: [{
+    access: 'auth',
+    token: jwt.sign({ _id: userOneID, access: 'auth' }, "secretPassPhrase").toString()
+  }]
 }]
 
+// Add todos to DB
 var populateTodos = ((done) => {
   Todo.remove({})
     .then(() => {
@@ -38,6 +58,7 @@ var populateTodos = ((done) => {
     });
 });
 
+// Add user 0 and 1 to DB, user 2 isn't
 var populateUsers = ((done) => {
   User.remove({}).then(() => {
     var userOne = new User(usersArray[0]).save();
@@ -48,4 +69,4 @@ var populateUsers = ((done) => {
   }).then(() => done());
 });
 
-module.exports = { todosArray, populateTodos, populateUsers }
+module.exports = { todosArray, usersArray, populateTodos, populateUsers }
