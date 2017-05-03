@@ -4,26 +4,12 @@ const { ObjectID } = require('mongodb');
 const { Todo } = require('../models/todo');
 const { User } = require('../models/user');
 const { app } = require('../server');
+const { populateTodos, populateUsers, todosArray, usersArray } = require('./seed/seed');
 
-// run below lines of code if you want to remove all todos before running the test
-
-var todosArray = [
-  { _id: new ObjectID(), text: "The first todo", completed: false },
-  { _id: new ObjectID(), text: "The second todo", completed: false },
-  { _id: new ObjectID(), text: "The 3rd todo", completed: true },
-  { _id: new ObjectID(), text: "The last todo", completed: true }
-];
 
 // beforeEach((done) => {
-before((done) => {
-  Todo.remove({})
-    .then(() => {
-      return Todo.insertMany(todosArray);
-
-    }).then(() => {
-      done();
-    });
-});
+before(populateTodos);
+before(populateUsers);
 
 describe('/POST/todos', () => {
 
