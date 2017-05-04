@@ -244,3 +244,41 @@ describe('POST /users', () => {
   });
 
 });
+
+describe('Post /users/login', () => {
+
+  it('Should login a user and return a token', (done) => {
+    request(app)
+      .post('/users/login')
+      .send({ 'email': usersArray[0].email, 'password': usersArray[0].password })
+      .expect(200)
+      .expect((res) => {
+        expect(res.headers['x-auth']).toExist();
+      })
+      .end(done);
+  })
+
+  it('Should return 401 if user does not exist', (done) => {
+    request(app)
+      .post('/users/login')
+      .send({ 'email': 'unknownuser@now.nl', 'password': usersArray[0].password })
+      .expect(401)
+      .expect((res) => {
+        expect(res.headers['x-auth']).toNotExist();
+        expect(res.body).toEqual({});
+      })
+      .end(done);
+  })
+  it('Should return 401 if user exists but password is invalid', (done) => {
+    request(app)
+      .post('/users/login')
+      .send({ 'email': usersArray[0].email, 'password': 'theWrongPassword@#$' })
+      .expect(401)
+      .expect((res) => {
+        expect(res.headers['x-auth']).toNotExist();
+        expect(res.body).toEqual({});
+      })
+      .end(done);
+  })
+
+})

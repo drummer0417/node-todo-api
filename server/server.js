@@ -151,7 +151,7 @@ app.post('/users/login', (req, res) => {
       })
     })
     .catch(() => {
-      res.status(400).send(`login failed`);
+      res.status(401).send(`login failed`);
     })
 })
 
