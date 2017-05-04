@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const { httpPort } = require('./config/config');
 const { User } = require('./models/user');
 const { Todo } = require('./models/todo');
-const { authenticate } = require('./middleware/authenticate');
+const { authenticate, verifyPassWord } = require('./middleware/authenticate');
 const { mongoose } = require('./db/mongoose');
 
 var app = express();
@@ -141,13 +141,27 @@ app.post('/users', (req, res) => {
     })
 });
 
+app.post('/users/login', (req, res) => {
+
+  var body = _.pick(req.body, ['email', 'password']);
+
+  User.findByCredentials(body.email, body.password).then((user) => {
+      return user.generateAuthToken().then((token) => {
+        res.header({ 'x-auth': token }).send({ user });
+      })
+    })
+    .catch(() => {
+      res.status(400).send(`login failed`);
+    })
+})
+
 app.get('/users/me', authenticate, (req, res) => {
-  res.send(req.user);
+  res
+    .send(req.user);
 
 });
 
 app.get('/users/:id', (req, res) => {
-
 
   var id = req.params.id;
 
