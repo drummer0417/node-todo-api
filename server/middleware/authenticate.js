@@ -9,6 +9,7 @@ var authenticate = (req, res, next) => {
       if (!user) {
         return Promise.reject('User not found') // processing stops and end up in .catch
       }
+      // if user with given token found... add user and token to req and continue by calling next
       req.user = user;
       req.token = token;
       next();

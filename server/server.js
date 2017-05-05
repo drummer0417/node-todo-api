@@ -141,6 +141,9 @@ app.post('/users', (req, res) => {
     })
 });
 
+//
+// logint user with email and password
+//
 app.post('/users/login', (req, res) => {
 
   var body = _.pick(req.body, ['email', 'password']);
@@ -155,32 +158,53 @@ app.post('/users/login', (req, res) => {
     })
 })
 
+//
+// Get the authenticated user
+//
 app.get('/users/me', authenticate, (req, res) => {
   res
     .send(req.user);
 
 });
 
-app.get('/users/:id', (req, res) => {
+//
+// Logoff users
+//
+app.delete('/users/me/token', authenticate, (req, resp) => {
+  console.log(JSON.stringify(req.user));
+  req.user.removeToken(req.token)
+    .then(() => {
+      resp.send();
+    })
+    .catch(() => {
+      resp(401);
+    });
+})
 
-  var id = req.params.id;
+// })
 
-  if (!ObjectID.isValid(id)) {
-    return res.status(404).send("Invalid id stecified");
-  }
 
-  User.findById(id).then((user) => {
-    if (user) {
-      // res.send(`User: ${JSON.stringify(user, undefined, 2)}`);
-      res.send({ user });
-    } else {
-      res.status(404).send('User not found!');
-    }
-  }, (error) => {
-    res.status(400).send(`User not found!, Error!\n${error}`);
-  });
+// app.get('/users/:id', (req, res) => {
+//
+//   var id = req.params.id;
+//
+//   if (!ObjectID.isValid(id)) {
+//     return res.status(404).send("Invalid id stecified");
+//   }
+//
+//   User.findById(id).then((user) => {
+//     if (user) {
+//       // res.send(`User: ${JSON.stringify(user, undefined, 2)}`);
+//       res.send({ user });
+//     } else {
+//       res.status(404).send('User not found!');
+//     }
+//   }, (error) => {
+//     res.status(400).send(`User not found!, Error!\n${error}`);
+//   });
+//
+// });
 
-});
 
 app.listen(httpPort, () => {
   console.log(`Server started on port ${httpPort}`);
