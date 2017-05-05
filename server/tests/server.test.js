@@ -205,7 +205,7 @@ describe('GET /users/me', () => {
 });
 
 describe('POST /users', () => {
-  console.log('User: ', usersArray[2]);
+  // console.log('User: ', usersArray[2]);
   it('Should create a user', (done) => {
     request(app)
       .post('/users')
@@ -282,3 +282,40 @@ describe('Post /users/login', () => {
   })
 
 })
+
+describe('DELETE /users/me/token', () => {
+
+  // first get the token from userThree (usersArray[2])
+  var theToken;
+
+  it('Should remove the token given in the request header', (done) => {
+
+    theToken = usersArray[5].tokens[0].token;
+
+    request(app)
+      .delete('/users/me/token')
+      .set('x-auth', theToken)
+      .expect(200)
+      .end((error, res) => {
+        if (error) {
+          return done(error);
+        }
+        User.findOne({ 'email': usersArray[5].email })
+          .then((user) => {
+            expect(user.tokens.length).toBe(0);
+            done();
+          })
+          .catch((error) => done(error))
+      })
+  });
+
+  it('Should return 401 when trying to remove a nonexitant token', (done) => {
+
+    request(app)
+      .delete('/users/me/token')
+      .set('x-auth', theToken)
+      .expect(401)
+      .expect((res) => {})
+      .end(done);
+  });
+});

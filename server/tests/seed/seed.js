@@ -14,6 +14,9 @@ const todosArray = [
 const userOneID = new ObjectID();
 const userTwoID = new ObjectID();
 const userThreeID = new ObjectID();
+const user4ID = new ObjectID();
+const user5ID = new ObjectID();
+const user6ID = new ObjectID();
 
 const usersArray = [{
   _id: userOneID,
@@ -39,11 +42,19 @@ const usersArray = [{
   email: 'user4@now.com',
   password: 'pasrd!'
 }, {
-  email: 'userOne@now.com',
+  email: 'user5@now.com',
   password: 'password!',
   tokens: [{
     access: 'auth',
-    token: jwt.sign({ _id: userOneID, access: 'auth' }, "secretPassPhrase").toString()
+    token: jwt.sign({ _id: user5ID, access: 'auth' }, "secretPassPhrase").toString()
+  }]
+}, {
+  _id: user6ID,
+  email: 'user6@now.com',
+  password: 'password!',
+  tokens: [{
+    access: 'auth',
+    token: jwt.sign({ _id: user6ID, access: 'auth' }, "secretPassPhrase").toString()
   }]
 }]
 
@@ -60,9 +71,11 @@ var populateTodos = ((done) => {
 
 // Add user 0 and 1 to DB, user 2 isn't
 var populateUsers = ((done) => {
+
   User.remove({}).then(() => {
     var userOne = new User(usersArray[0]).save();
     var userTwo = new User(usersArray[1]).save();
+    var userSix = new User(usersArray[5]).save();
 
     return Promise.all([userOne, userTwo]);
 

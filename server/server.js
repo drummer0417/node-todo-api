@@ -171,7 +171,7 @@ app.get('/users/me', authenticate, (req, res) => {
 // Logoff users
 //
 app.delete('/users/me/token', authenticate, (req, resp) => {
-  console.log(JSON.stringify(req.user));
+  // console.log(JSON.stringify(req.user));
   req.user.removeToken(req.token)
     .then(() => {
       resp.send();
