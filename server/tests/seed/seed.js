@@ -12,10 +12,10 @@ const user5ID = new ObjectID();
 const user6ID = new ObjectID();
 
 const todosArray = [
-  { _id: new ObjectID(), text: "The first todo", completed: false, _creator: userOneID },
-  { _id: new ObjectID(), text: "The second todo", completed: false, _creator: userOneID },
-  { _id: new ObjectID(), text: "The 3rd todo", completed: true, _creator: userTwoID },
-  { _id: new ObjectID(), text: "The last todo", completed: true, _creator: userTwoID }
+  { _id: new ObjectID(), text: "The first todo u1", completed: false, _creator: userOneID },
+  { _id: new ObjectID(), text: "The second todo u1", completed: false, _creator: userOneID },
+  { _id: new ObjectID(), text: "The 3rd todo u2", completed: true, _creator: userTwoID },
+  { _id: new ObjectID(), text: "The last todo u2", completed: true, _creator: userTwoID }
 ];
 
 
@@ -30,7 +30,11 @@ const usersArray = [{
 }, {
   _id: userTwoID,
   email: 'userTwo@now.com',
-  password: 'password!'
+  password: 'password!',
+  tokens: [{
+    access: 'auth',
+    token: jwt.sign({ _id: userTwoID, access: 'auth' }, "secretPassPhrase").toString()
+  }]
 }, {
   _id: userThreeID,
   email: 'userThree@now.com',
@@ -78,7 +82,7 @@ var populateUsers = ((done) => {
     var userTwo = new User(usersArray[1]).save();
     var userSix = new User(usersArray[5]).save();
 
-    return Promise.all([userOne, userTwo]);
+    return Promise.all([userOne, userTwo, userSix]);
 
   }).then(() => done());
 });

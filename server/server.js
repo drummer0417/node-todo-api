@@ -51,16 +51,16 @@ app.get('/todos', authenticate, (req, res) => {
     });
 })
 
-app.get('/todos/:id', (req, res) => {
+app.get('/todos/:id', authenticate, (req, res) => {
 
   var id = req.params.id;
 
-  if (!ObjectID.isValid(id)) {
+  if(!ObjectID.isValid(id)) {
     return res.status(404).send("Invalid id stecified");
   }
 
-  Todo.findById(id).then((todo) => {
-    if (todo) {
+  Todo.findOne({ '_id': id, '_creator': req.user._id }).then((todo) => {
+    if(todo) {
       // res.send(`User: ${JSON.stringify(user, undefined, 2)}`);
       res.send({ todo });
     } else {
@@ -72,19 +72,21 @@ app.get('/todos/:id', (req, res) => {
 
 });
 
-app.delete('/todos/:id', (req, res) => {
+app.delete('/todos/:id', authenticate, (req, res) => {
 
   var id = req.params.id;
 
-  if (!ObjectID.isValid(id)) {
+  if(!ObjectID.isValid(id)) {
     // console.log(`Invalid id: "${id}"`);
     return res.status(404).send('invalid id');
   }
-  Todo.findByIdAndRemove(id)
+  Todo.findOneAndRemove({ '_id': id, '_creator': req.user._id })
     .then((todo) => {
-      if (todo) {
+      if(todo) {
+
         res.send({ todo });
       } else {
+        console.log('not found');
         res.status(404).send('Todo not found');
       }
     }, (error) => {
@@ -93,28 +95,27 @@ app.delete('/todos/:id', (req, res) => {
     .catch((error) => {
       res.status(400).send(`Error: \n${error}`);
     })
-
 })
 
-app.patch('/todos/:id', (req, res) => {
+app.patch('/todos/:id', authenticate, (req, res) => {
 
   var id = req.params.id;
 
-  if (!ObjectID.isValid(id)) {
+  if(!ObjectID.isValid(id)) {
     return res.status(404).send('Invalid ID');
   }
 
   var body = _.pick(req.body, ['completed', 'text']);
 
-  if (_.isBoolean(body.completed) && body.completed) {
+  if(_.isBoolean(body.completed) && body.completed) {
     body.completedAt = new Date().getTime();
   } else {
     body.completed = false;
     body.completedAt = null;
   }
-  Todo.findByIdAndUpdate(id, { $set: body }, { new: true })
+  Todo.findOneAndUpdate({ '_id': id, '_creator': req.user._id }, { $set: body }, { new: true })
     .then((todo) => {
-      if (todo) {
+      if(todo) {
         res.send({ todo });
       } else {
         res.status(404).send('Todo not found...');
