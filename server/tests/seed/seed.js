@@ -4,19 +4,20 @@ const jwt = require('jsonwebtoken');
 const { Todo } = require('./../../models/todo');
 const { User } = require('./../../models/user');
 
-const todosArray = [
-  { _id: new ObjectID(), text: "The first todo", completed: false },
-  { _id: new ObjectID(), text: "The second todo", completed: false },
-  { _id: new ObjectID(), text: "The 3rd todo", completed: true },
-  { _id: new ObjectID(), text: "The last todo", completed: true }
-];
-
 const userOneID = new ObjectID();
 const userTwoID = new ObjectID();
 const userThreeID = new ObjectID();
 const user4ID = new ObjectID();
 const user5ID = new ObjectID();
 const user6ID = new ObjectID();
+
+const todosArray = [
+  { _id: new ObjectID(), text: "The first todo", completed: false, _creator: userOneID },
+  { _id: new ObjectID(), text: "The second todo", completed: false, _creator: userOneID },
+  { _id: new ObjectID(), text: "The 3rd todo", completed: true, _creator: userTwoID },
+  { _id: new ObjectID(), text: "The last todo", completed: true, _creator: userTwoID }
+];
+
 
 const usersArray = [{
   _id: userOneID,

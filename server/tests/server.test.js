@@ -20,11 +20,13 @@ describe('/POST/todos', () => {
 
     request(app)
       .post('/todos')
+      .set('x-auth', usersArray[0].tokens[0].token)
       .send({ _id: id, text })
       .expect(200)
       .expect((res) => {
-        expect(res.body._id).toEqual(id);
         expect(res.body.text).toEqual(text);
+        expect(res.body.completed).toBe(false);
+        expect(res.body.completedAt).toNotExist();
       })
       .end(done);
   });
@@ -33,6 +35,7 @@ describe('/POST/todos', () => {
 
     request(app)
       .post('/todos')
+      .set('x-auth', usersArray[0].tokens[0].token)
       .send({})
       .expect(400)
       .end(done);
@@ -45,9 +48,10 @@ describe('GET /todos', () => {
 
     request(app)
       .get('/todos')
+      .set('x-auth', usersArray[0].tokens[0].token)
       .expect(200)
       .expect((res) => {
-        expect(res.body.todos.length).toBe(5);
+        expect(res.body.todos.length).toBe(3);
       })
       .end(done);
 

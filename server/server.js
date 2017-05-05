@@ -15,13 +15,14 @@ var app = express();
 
 app.use(bodyParser.json());
 
-app.post('/todos', (req, res) => {
+//
+// Add a new todo
+//
+app.post('/todos', authenticate, (req, res) => {
 
   var todo = new Todo({
-    '_id': req.body._id || new ObjectID,
     'text': req.body.text,
-    'completed': req.body.completed,
-    'completedAt': req.body.completedAt
+    '_creator': req.user._id
   });
 
   todo.save().then((doc) => {
@@ -33,8 +34,8 @@ app.post('/todos', (req, res) => {
   });
 });
 
-app.get('/todos', (req, res) => {
-  Todo.find({})
+app.get('/todos', authenticate, (req, res) => {
+  Todo.find({ '_creator': req.user._id })
     .then((todos) => {
       // console.log(`Todo\'s: ${JSON.stringify(todos, undefined, 2)}`);
       res.send({
