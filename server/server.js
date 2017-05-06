@@ -208,8 +208,8 @@ app.delete('/users/me/token', authenticate, (req, resp) => {
 // });
 
 
-app.listen(httpPort, () => {
-  console.log(`Server started on port ${httpPort}`);
+app.listen(process.env.HTTP_PORT, () => {
+  console.log(`Server started on port ${process.env.HTTP_PORT}`);
 })
 
 module.exports = { app };

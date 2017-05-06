@@ -1,5 +1,4 @@
 var env = process.env.NODE_ENV || 'development';
-var httpPort = process.env.PORT || 3000;
 var mongoPort = '27017';
 
 if(env === 'development' || env === 'test') {
@@ -22,5 +21,3 @@ if(env === 'development' || env === 'test') {
 console.log('\n*****************************************************');
 console.log(`env: ${env}\nMONGODB_URI: ${process.env.MONGODB_URI}`);
 console.log('*****************************************************');
-
-module.exports = { httpPort };
