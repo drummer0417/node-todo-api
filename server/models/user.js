@@ -42,7 +42,7 @@ UserSchema.methods.toJSON = function() {
 UserSchema.methods.generateAuthToken = function() {
   var user = this;
   var access = 'auth';
-  var token = jwt.sign({ '_id': user._id, access }, "secretPassPhrase");
+  var token = jwt.sign({ '_id': user._id, access }, process.env.JWT_SECRET);
 
   user.tokens.push({ access, token });
 
@@ -67,14 +67,14 @@ UserSchema.statics.findByToken = function(token) {
   var User = this;
 
   try {
-    var decoded = jwt.verify(token, "secretPassPhrase");
+    var decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     return User.findOne({
       '_id': decoded._id,
       'tokens.token': token,
       'tokens.access': decoded.access
     })
-  } catch (e) {
+  } catch(e) {
     // return new Promise((resolve, reject) => {
     //   return reject('Authentication failed');
     // });
@@ -88,12 +88,12 @@ UserSchema.statics.findByCredentials = function(email, password) {
 
   return User.findOne({ email })
     .then((user) => {
-      if (!user) {
+      if(!user) {
         return Promise.reject();
       }
       return new Promise((resolve, reject) => {
         bcrypt.compare(password, user.password, (err, res) => {
-          if (res) {
+          if(res) {
             resolve(user);
           } else {
             reject();
@@ -111,7 +111,7 @@ UserSchema.statics.findByCredentials = function(email, password) {
 //
 UserSchema.pre('save', function(next) {
   var user = this;
-  if (user.isModified('password')) {
+  if(user.isModified('password')) {
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(user.password, salt, (err, hash) => {
         user.password = hash;

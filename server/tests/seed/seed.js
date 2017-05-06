@@ -25,7 +25,7 @@ const usersArray = [{
   password: 'password!',
   tokens: [{
     access: 'auth',
-    token: jwt.sign({ _id: userOneID, access: 'auth' }, "secretPassPhrase").toString()
+    token: jwt.sign({ _id: userOneID, access: 'auth' }, process.env.JWT_SECRET).toString()
   }]
 }, {
   _id: userTwoID,
@@ -33,7 +33,7 @@ const usersArray = [{
   password: 'password!',
   tokens: [{
     access: 'auth',
-    token: jwt.sign({ _id: userTwoID, access: 'auth' }, "secretPassPhrase").toString()
+    token: jwt.sign({ _id: userTwoID, access: 'auth' }, process.env.JWT_SECRET).toString()
   }]
 }, {
   _id: userThreeID,
@@ -41,7 +41,7 @@ const usersArray = [{
   password: 'password!',
   tokens: [{
     access: 'auth',
-    token: jwt.sign({ _id: userThreeID, access: 'auth' }, "secretPassPhrase").toString()
+    token: jwt.sign({ _id: userThreeID, access: 'auth' }, process.env.JWT_SECRET).toString()
   }]
 }, {
   email: 'user4@now.com',
@@ -51,7 +51,7 @@ const usersArray = [{
   password: 'password!',
   tokens: [{
     access: 'auth',
-    token: jwt.sign({ _id: user5ID, access: 'auth' }, "secretPassPhrase").toString()
+    token: jwt.sign({ _id: user5ID, access: 'auth' }, process.env.JWT_SECRET).toString()
   }]
 }, {
   _id: user6ID,
@@ -59,7 +59,7 @@ const usersArray = [{
   password: 'password!',
   tokens: [{
     access: 'auth',
-    token: jwt.sign({ _id: user6ID, access: 'auth' }, "secretPassPhrase").toString()
+    token: jwt.sign({ _id: user6ID, access: 'auth' }, process.env.JWT_SECRET).toString()
   }]
 }]
 

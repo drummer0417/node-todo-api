@@ -144,7 +144,7 @@ app.post('/users', (req, res) => {
 });
 
 //
-// logint user with email and password
+// login user with email and password
 //
 app.post('/users/login', (req, res) => {
 
